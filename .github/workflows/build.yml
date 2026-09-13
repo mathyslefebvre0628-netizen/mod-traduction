@@ -19,3 +19,9 @@ jobs:
         run: gradle wrapper --gradle-version 9.7
       - name: Build
         run: ./gradlew build
+      - name: Upload JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: LinguaBridge-jar
+          path: build/libs/*.jar
+          if-no-files-found: error
