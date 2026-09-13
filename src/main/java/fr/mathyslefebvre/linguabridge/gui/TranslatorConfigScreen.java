@@ -3,7 +3,6 @@ package fr.mathyslefebvre.linguabridge.gui;
 import fr.mathyslefebvre.linguabridge.LinguaBridgeClient;
 import fr.mathyslefebvre.linguabridge.config.ModConfig;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
@@ -152,13 +151,6 @@ public final class TranslatorConfigScreen extends Screen {
     private static int indexOf(String code) {
         for (int i = 0; i < LANGUAGES.length; i++) if (LANGUAGES[i].equalsIgnoreCase(code)) return i;
         return 0;
-    }
-
-    @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        renderBackground(context, mouseX, mouseY, delta);
-        context.drawCenteredString(this.font, this.title, this.width / 2, 12, 0xFFFFFF);
-        super.render(context, mouseX, mouseY, delta);
     }
 
     @Override
