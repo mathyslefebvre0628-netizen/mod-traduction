@@ -6,12 +6,13 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import org.lwjgl.glfw.GLFW;
 
 @Environment(EnvType.CLIENT)
@@ -26,14 +27,17 @@ public final class LinguaBridgeClient implements ClientModInitializer {
     public void onInitializeClient() {
         TRANSLATIONS = new TranslationManager(CONFIG);
 
-        toggleKey = KeyBindingHelper.registerKeyBinding(new KeyMapping(
-                "key.linguabridge.toggle", GLFW.GLFW_KEY_F8, KeyMapping.Category.MISC));
+        KeyMapping.Category category = KeyMapping.Category.register(
+                Identifier.fromNamespaceAndPath(MOD_ID, "category"));
+        toggleKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
+                "key.linguabridge.toggle", GLFW.GLFW_KEY_F8, category));
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (toggleKey.consumeClick()) {
                 CONFIG.enabled = !CONFIG.enabled;
                 CONFIG.save();
-                client.gui.setOverlayMessage(Component.literal("LinguaBridge: " + (CONFIG.enabled ? "ON" : "OFF")), false);
+                client.gui.hud.setOverlayMessage(
+                        Component.literal("LinguaBridge: " + (CONFIG.enabled ? "ON" : "OFF")), true);
             }
         });
 
@@ -48,7 +52,7 @@ public final class LinguaBridgeClient implements ClientModInitializer {
                         if (error == null && result != null && result.text() != null && !result.text().isBlank() && client.player != null) {
                             client.player.connection.sendChat(result.text());
                         } else if (client.player != null) {
-                            client.gui.setOverlayMessage(Component.literal("LinguaBridge: translation failed"), false);
+                            client.gui.hud.setOverlayMessage(Component.literal("LinguaBridge: translation failed"), true);
                         }
                     } finally {
                         forwardingTranslatedMessage = false;
@@ -71,7 +75,7 @@ public final class LinguaBridgeClient implements ClientModInitializer {
 
                     Component displayed = Component.literal(result.text());
                     if (sender != null) {
-                        String senderName = sender.getName();
+                        String senderName = sender.name();
                         if (senderName != null && !senderName.isBlank() && !original.startsWith(senderName)) {
                             displayed = Component.literal(senderName + ": ").append(displayed);
                         }
