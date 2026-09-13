@@ -45,9 +45,9 @@ public final class LinguaBridgeClient implements ClientModInitializer {
                 Minecraft client = Minecraft.getInstance();
                 client.execute(() -> {
                     try {
-                        if (error == null && result != null && client.player != null) {
+                        if (error == null && result != null && result.text() != null && !result.text().isBlank() && client.player != null) {
                             client.player.connection.sendChat(result.text());
-                        } else {
+                        } else if (client.player != null) {
                             client.gui.setOverlayMessage(Component.literal("LinguaBridge: translation failed"), false);
                         }
                     } finally {
@@ -64,14 +64,22 @@ public final class LinguaBridgeClient implements ClientModInitializer {
             if (original.isBlank() || original.startsWith("/") || isTrivial(original)) return true;
 
             TRANSLATIONS.translate(original, "auto", CONFIG.incomingLanguage).whenComplete((result, error) -> {
-                if (error != null || result == null || result.text().isBlank()) return;
+                if (error != null || result == null || result.text() == null || result.text().isBlank()) return;
                 Minecraft client = Minecraft.getInstance();
                 client.execute(() -> {
-                    if (client.player != null) {
-                        String prefix = CONFIG.showTranslationIndicator
-                                ? "[" + CONFIG.incomingLanguage.toUpperCase() + "] " : "";
-                        client.gui.chatListener().handleSystemMessage(Component.literal(prefix + result.text()), false);
+                    if (client.player == null) return;
+
+                    Component displayed = Component.literal(result.text());
+                    if (sender != null) {
+                        String senderName = sender.getName();
+                        if (senderName != null && !senderName.isBlank() && !original.startsWith(senderName)) {
+                            displayed = Component.literal(senderName + ": ").append(displayed);
+                        }
                     }
+                    if (CONFIG.showTranslationIndicator) {
+                        displayed = Component.literal("[" + CONFIG.incomingLanguage.toUpperCase() + "] ").append(displayed);
+                    }
+                    client.gui.chatListener().handleSystemMessage(displayed, false);
                 });
             });
             return false;
