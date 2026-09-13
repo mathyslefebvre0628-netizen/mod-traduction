@@ -1,3 +1,16 @@
 {
-  "key.linguabridge.toggle": "Toggle LinguaBridge"
+  "key.linguabridge.toggle": "Toggle LinguaBridge",
+  "screen.linguabridge.title": "LinguaBridge",
+  "screen.linguabridge.translation": "Translation",
+  "screen.linguabridge.writing": "My writing language",
+  "screen.linguabridge.incoming": "Incoming chat language",
+  "screen.linguabridge.auto_detect": "Auto detect incoming language",
+  "screen.linguabridge.indicator": "Show translation indicator",
+  "screen.linguabridge.api_url": "API URL",
+  "screen.linguabridge.api_key": "API Key",
+  "screen.linguabridge.timeout": "Timeout (ms)",
+  "screen.linguabridge.test_text": "Test text",
+  "screen.linguabridge.test": "Test translation",
+  "screen.linguabridge.save": "Save",
+  "screen.linguabridge.test_failed": "Translation test failed"
 }
