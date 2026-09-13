@@ -1,5 +1,6 @@
 package fr.mathyslefebvre.linguabridge.translation;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import fr.mathyslefebvre.linguabridge.config.ModConfig;
@@ -44,9 +45,18 @@ public final class LibreTranslateProvider implements TranslationProvider {
                         throw new IllegalStateException("LibreTranslate HTTP " + response.statusCode());
                     }
                     JsonObject json = JsonParser.parseString(response.body()).getAsJsonObject();
-                    String translated = json.get("translatedText").getAsString();
-                    String detected = json.has("detectedLanguage") ? json.get("detectedLanguage").getAsString() : sourceLanguage;
-                    return new TranslationResult(translated, detected);
+                    JsonElement translatedElement = json.get("translatedText");
+                    if (translatedElement == null || !translatedElement.isJsonPrimitive()) {
+                        throw new IllegalStateException("LibreTranslate response has no translatedText");
+                    }
+
+                    String detected = sourceLanguage;
+                    JsonElement detectedElement = json.get("detectedLanguage");
+                    if (detectedElement != null && detectedElement.isJsonObject()) {
+                        JsonElement language = detectedElement.getAsJsonObject().get("language");
+                        if (language != null && language.isJsonPrimitive()) detected = language.getAsString();
+                    }
+                    return new TranslationResult(translatedElement.getAsString(), detected);
                 });
     }
 }
