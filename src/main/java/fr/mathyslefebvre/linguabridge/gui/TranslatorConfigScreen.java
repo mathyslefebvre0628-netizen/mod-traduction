@@ -3,7 +3,7 @@ package fr.mathyslefebvre.linguabridge.gui;
 import fr.mathyslefebvre.linguabridge.LinguaBridgeClient;
 import fr.mathyslefebvre.linguabridge.config.ModConfig;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
@@ -82,7 +82,7 @@ public final class TranslatorConfigScreen extends Screen {
                 .bounds(left, top + 240, 145, 20).build());
         addRenderableWidget(Button.builder(Component.translatable("screen.linguabridge.save"), b -> saveAndClose())
                 .bounds(left + 155, top + 240, 145, 20).build());
-        addRenderableWidget(Button.builder(Component.translatable("gui.cancel"), b -> Minecraft.getInstance().setScreen(parent))
+        addRenderableWidget(Button.builder(Component.translatable("gui.cancel"), b -> Minecraft.getInstance().gui.setScreen(parent))
                 .bounds(left, top + 265, 300, 20).build());
     }
 
@@ -91,9 +91,9 @@ public final class TranslatorConfigScreen extends Screen {
         LinguaBridgeClient.TRANSLATIONS.translate(testText.getValue(), config.outgoingLanguage, "en")
                 .whenComplete((result, error) -> Minecraft.getInstance().execute(() -> {
                     if (error != null || result == null) {
-                        Minecraft.getInstance().gui.setOverlayMessage(Component.translatable("screen.linguabridge.test_failed"), false);
+                        Minecraft.getInstance().gui.hud.setOverlayMessage(Component.translatable("screen.linguabridge.test_failed"), true);
                     } else {
-                        Minecraft.getInstance().gui.setOverlayMessage(Component.literal(result.text()), false);
+                        Minecraft.getInstance().gui.hud.setOverlayMessage(Component.literal(result.text()), true);
                     }
                 }));
     }
@@ -101,7 +101,7 @@ public final class TranslatorConfigScreen extends Screen {
     private void saveAndClose() {
         saveFields();
         config.save();
-        Minecraft.getInstance().setScreen(parent);
+        Minecraft.getInstance().gui.setScreen(parent);
     }
 
     private void saveFields() {
@@ -155,10 +155,10 @@ public final class TranslatorConfigScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        renderBackground(graphics, mouseX, mouseY, delta);
-        graphics.drawCenteredString(this.font, this.title, this.width / 2, 12, 0xFFFFFF);
-        super.render(graphics, mouseX, mouseY, delta);
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        renderBackground(context, mouseX, mouseY, delta);
+        context.drawCenteredString(this.font, this.title, this.width / 2, 12, 0xFFFFFF);
+        super.render(context, mouseX, mouseY, delta);
     }
 
     @Override
