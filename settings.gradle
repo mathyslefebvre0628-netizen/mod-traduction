@@ -1,6 +1,7 @@
 pluginManagement {
     repositories {
         maven { url = "https://maven.fabricmc.net/" }
+        maven { url = "https://maven.terraformersmc.com/releases/" }
         gradlePluginPortal()
         mavenCentral()
     }
@@ -10,6 +11,7 @@ dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
     repositories {
         maven { url = "https://maven.fabricmc.net/" }
+        maven { url = "https://maven.terraformersmc.com/releases/" }
         mavenCentral()
     }
 }
