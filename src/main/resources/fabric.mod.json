@@ -3,12 +3,15 @@
   "id": "linguabridge",
   "version": "${version}",
   "name": "LinguaBridge",
-  "description": "Client-side bidirectional Minecraft chat translation.",
+  "description": "Automatic bidirectional Minecraft chat translation directly from the client.",
   "authors": ["Mathys Lefebvre"],
   "environment": "client",
   "entrypoints": {
     "client": [
       "fr.mathyslefebvre.linguabridge.LinguaBridgeClient"
+    ],
+    "modmenu": [
+      "fr.mathyslefebvre.linguabridge.modmenu.ModMenuIntegration"
     ]
   },
   "depends": {
@@ -17,7 +20,7 @@
     "fabric-api": "*"
   },
   "suggests": {
-    "modmenu": "*",
+    "modmenu": ">=20.0.1",
     "chat_heads": "*"
   }
 }
