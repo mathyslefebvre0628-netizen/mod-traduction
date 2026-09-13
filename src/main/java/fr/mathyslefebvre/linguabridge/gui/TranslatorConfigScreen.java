@@ -82,10 +82,8 @@ public final class TranslatorConfigScreen extends Screen {
                 .bounds(left, top + 240, 145, 20).build());
         addRenderableWidget(Button.builder(Component.translatable("screen.linguabridge.save"), b -> saveAndClose())
                 .bounds(left + 155, top + 240, 145, 20).build());
-        addRenderableWidget(Button.builder(CommonComponents.GUI_CANCEL, b -> {
-            config.load();
-            Minecraft.getInstance().setScreen(parent);
-        }).bounds(left, top + 265, 300, 20).build());
+        addRenderableWidget(Button.builder(Component.translatable("gui.cancel"), b -> Minecraft.getInstance().setScreen(parent))
+                .bounds(left, top + 265, 300, 20).build());
     }
 
     private void testTranslation() {
