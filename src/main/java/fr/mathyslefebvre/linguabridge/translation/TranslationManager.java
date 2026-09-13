@@ -21,20 +21,21 @@ public final class TranslationManager {
     private final Map<String, TranslationResult> cache = new LinkedHashMap<>(64, 0.75f, true) {
         @Override
         protected boolean removeEldestEntry(Map.Entry<String, TranslationResult> eldest) {
-            return size() > config.cacheSize;
+            return size() > Math.max(16, config.cacheSize);
         }
     };
 
     public TranslationManager(ModConfig config) {
         this.config = config;
         this.provider = new LibreTranslateProvider(config);
-        this.permits = new Semaphore(Math.max(1, config.maxConcurrentRequests));
+        this.permits = new Semaphore(Math.max(1, Math.min(8, config.maxConcurrentRequests)));
     }
 
     public CompletableFuture<TranslationResult> translate(String text, String source, String target) {
-        if (text == null || text.isBlank() || source.equalsIgnoreCase(target)) {
+        if (text == null || text.isBlank() || source == null || target == null || source.equalsIgnoreCase(target)) {
             return CompletableFuture.completedFuture(new TranslationResult(text, source));
         }
+
         String key = source + "\u0000" + target + "\u0000" + text;
         synchronized (cache) {
             TranslationResult cached = cache.get(key);
@@ -42,14 +43,16 @@ public final class TranslationManager {
         }
 
         return CompletableFuture.supplyAsync(() -> {
+            boolean acquired = false;
             try {
                 permits.acquire();
+                acquired = true;
                 return provider.translate(text, source, target).join();
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 throw new IllegalStateException("Translation interrupted", e);
             } finally {
-                permits.release();
+                if (acquired) permits.release();
             }
         }, executor).thenApply(result -> {
             synchronized (cache) {
