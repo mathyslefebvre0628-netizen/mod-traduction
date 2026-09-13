@@ -1,3 +1,16 @@
 {
-  "key.linguabridge.toggle": "Activer/Désactiver LinguaBridge"
+  "key.linguabridge.toggle": "Activer/Désactiver LinguaBridge",
+  "screen.linguabridge.title": "LinguaBridge",
+  "screen.linguabridge.translation": "Traduction",
+  "screen.linguabridge.writing": "Langue d'écriture",
+  "screen.linguabridge.incoming": "Langue du chat reçu",
+  "screen.linguabridge.auto_detect": "Détection automatique de la langue",
+  "screen.linguabridge.indicator": "Afficher l'indicateur de traduction",
+  "screen.linguabridge.api_url": "URL de l'API",
+  "screen.linguabridge.api_key": "Clé API",
+  "screen.linguabridge.timeout": "Délai (ms)",
+  "screen.linguabridge.test_text": "Texte de test",
+  "screen.linguabridge.test": "Tester la traduction",
+  "screen.linguabridge.save": "Enregistrer",
+  "screen.linguabridge.test_failed": "Échec du test de traduction"
 }
