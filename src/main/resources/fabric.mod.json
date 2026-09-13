@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "linguabridge",
+  "version": "${version}",
+  "name": "LinguaBridge",
+  "description": "Client-side bidirectional Minecraft chat translation.",
+  "authors": ["Mathys Lefebvre"],
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "fr.mathyslefebvre.linguabridge.LinguaBridgeClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.19.3",
+    "minecraft": "26.2",
+    "fabric-api": "*"
+  },
+  "suggests": {
+    "modmenu": "*",
+    "chat_heads": "*"
+  }
+}
